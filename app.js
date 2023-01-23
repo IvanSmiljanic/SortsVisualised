@@ -47,6 +47,7 @@ window.onload = function()
 {
     let array = randomArray();
     let redBars = [];
+    let sorting = false;
     drawCurrentState(array, redBars);
 
     async function quickSort()
@@ -116,17 +117,17 @@ window.onload = function()
 
     async function mergeSort()
     {
-        await mergesort_run(0, array.length - 1);
+        await mergeSortRun(0, array.length - 1);
     }
 
-    async function mergesort_run(left, right)
+    async function mergeSortRun(left, right)
     {
         if (left < right)
         {
-            mid = Math.floor((left + right) / 2);
+            let mid = Math.floor((left + right) / 2);
 
-            await mergesort_run(left, mid);
-            await mergesort_run(mid + 1, right);
+            await mergeSortRun(left, mid);
+            await mergeSortRun(mid + 1, right);
 
             await merge(left, mid, right);
         }
@@ -138,21 +139,24 @@ window.onload = function()
 
         let bCount = 0
         let lCount = left;
-        let rCount = mid + 1;
+        let rCount = mid + 1
 
-        while ((lCount <= mid) && (rCount <= right))
+        while (lCount <= mid && rCount <= right)
         {
             if (array[lCount] <= array[rCount])
             {
                 bArray[bCount] = array[lCount];
-                bCount++; lCount++;
+                redBars = [lCount, rCount];
+                bCount++;
+                lCount++;
             }
             else
             {
                 bArray[bCount] = array[rCount];
-                bCount++; rCount++;
+                redBars = [lCount, rCount];
+                bCount++;
+                rCount++;
             }
-            redBars = [lCount, rCount];
             drawCurrentState(array, redBars);
             redBars = [];
             await sleep(20);
@@ -163,9 +167,11 @@ window.onload = function()
             {
                 bArray[bCount] = array[rCount];
                 redBars = [lCount, rCount];
+                bCount++;
+                rCount++;
                 drawCurrentState(array, redBars);
                 redBars = [];
-                bCount++; rCount++;
+                await sleep(20);
             }
         }
         else
@@ -174,20 +180,21 @@ window.onload = function()
             {
                 bArray[bCount] = array[lCount];
                 redBars = [lCount, rCount];
+                bCount++;
+                lCount++;
                 drawCurrentState(array, redBars);
                 redBars = [];
-                bCount++; lCount++;
+                await sleep(20);
             }
         }
-        console.log(bArray);
         for (let i = 0; i < bArray.length; i++)
         {
-            array[left+i] = bArray[i];
-            redBars = [left+i];
+            array[left + i] = bArray[i];
+            redBars = [left + i];
             drawCurrentState(array, redBars);
             redBars = [];
+            await sleep(20);
         }
-        console.log(array.slice(left, left + bArray.length), bArray);
     }
 
     async function bubbleSort()
@@ -216,19 +223,24 @@ window.onload = function()
 
     $("#submit").click(async function()
     {
-        if ($("#sortType").val() == "quickSort")
+        if (!sorting)
         {
-            await quickSort().then();
+            sorting = true;
+            if ($("#sortType").val() == "quickSort")
+            {
+                await quickSort();
+            }
+            else if ($("#sortType").val() == "mergeSort")
+            {
+                await mergeSort().then();
+            }
+            else if ($("#sortType").val() == "bubbleSort")
+            {
+                await bubbleSort().then();
+            };
+            redBars = [];
+            drawCurrentState(array, redBars);
+            sorting = false;
         }
-        else if ($("#sortType").val() == "mergeSort")
-        {
-            await mergeSort().then();
-        }
-        else if ($("#sortType").val() == "bubbleSort")
-        {
-            await bubbleSort().then();
-        };
-        redBars = [];
-        drawCurrentState(array, redBars);
     });
 }
