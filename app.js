@@ -263,8 +263,11 @@ window.onload = function()
     
     $("#random").click(function()
     {
-        array = randomArray();
-        drawCurrentState(array, redBars);
+        if (!sorting)
+        {
+            array = randomArray();
+            drawCurrentState(array, redBars);
+        }
     });
 
     $("#submit").click(async function()
