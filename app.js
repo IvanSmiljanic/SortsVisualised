@@ -112,7 +112,22 @@ window.onload = function()
 
     function choosePivot(left, right)
     {
-        return Math.floor((left + right) / 2);
+        if ($("#pivotStrategy").val() == "median")
+        {
+            return Math.floor((left + right) / 2);
+        }
+        else if ($("#pivotStrategy").val() == "first")
+        {
+            return left;
+        }
+        else if ($("#pivotStrategy").val() == "last")
+        {
+            return right;
+        }
+        else if ($("#pivotStrategy").val() == "random")
+        {
+            return (Math.floor(Math.random() * (right - left + 1) + left));
+        }
     }
 
     async function mergeSort()
@@ -267,6 +282,20 @@ window.onload = function()
         {
             array = randomArray();
             drawCurrentState(array, redBars);
+        }
+    });
+
+    $("#sortType").change(function()
+    {
+        if ($(this).val() == "quickSort")
+        {
+            $("#pivotStrategy").css("display", "inline-block");
+            $("#formContainer").css("width", "400px");
+        }
+        else
+        {
+            $("#pivotStrategy").css("display", "none");
+            $("#formContainer").css("width", "300px");
         }
     });
 
