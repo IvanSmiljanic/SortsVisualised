@@ -197,6 +197,52 @@ window.onload = function()
         }
     }
 
+    async function selectionSort()
+    {
+        let k;
+        for (let i = 0; i < array.length - 1; i++)
+        {
+            k = i;
+            for (let j = i + 1; j < array.length; j++)
+            {
+                redBars = [j, k];
+                if (array[j] < array[k])
+                {
+                    k = j;
+                }
+                drawCurrentState(array, redBars);
+                redBars = [];
+                await sleep(20);
+            }
+            redBars = [i, k];
+            swapItems(array, i, k);
+            drawCurrentState(array, redBars);
+            redBars = [];
+            await sleep(20);
+        }
+    }
+
+    async function insertionSort()
+    {
+        let j;
+        let t;
+        for (let i = 1; i < array.length; i++)
+        {
+            j = i;
+            t = array[j];
+            while (j > 0 && t < array[j-1])
+            {
+                redBars = [j, j-1];
+                array[j] = array[j-1];
+                j--;
+                drawCurrentState(array, redBars);
+                redBars = [];
+                await sleep(20);
+            }
+            array[j] = t;
+        }
+    }
+
     async function bubbleSort()
     {
         for (let i = 0; i < array.length; i++)
@@ -232,11 +278,20 @@ window.onload = function()
             }
             else if ($("#sortType").val() == "mergeSort")
             {
-                await mergeSort().then();
+                await mergeSort();
+            }
+            else if ($("#sortType").val() == "selectionSort")
+            {
+                await selectionSort();
+            }
+            else if ($("#sortType").val() == "insertionSort")
+            {
+                console.log("INSERTION SORT");
+                await insertionSort();
             }
             else if ($("#sortType").val() == "bubbleSort")
             {
-                await bubbleSort().then();
+                await bubbleSort();
             };
             redBars = [];
             drawCurrentState(array, redBars);
