@@ -70,7 +70,7 @@ window.onload = function()
     async function partition(left, right)
     {
         let pivotIndex = choosePivot(left, right);
-        swapItems(pivotIndex, right);
+        swapItems(array, pivotIndex, right);
 
         let leftPointer = left;
         let rightPointer = right - 1;
